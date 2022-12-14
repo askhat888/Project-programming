@@ -28,6 +28,9 @@ imgBangs = [
     pygame.image.load('bang2.png'),
     pygame.image.load('bang3.png'),
 ]
+def restart():
+    restart_value=fontRes.render("Press mouse to restart", 1, (255, 255, 255))
+    window.blit(restart_value, (10, 580))
 class Tank:
     def __init__(self, color, px, py, direct, keyList):
         objects.append(self)
@@ -183,6 +186,25 @@ while play:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             play = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            while len(objects) != 0:
+                for i in objects:
+                    objects.remove(i)
+            Tank('blue', 100, 275, 0, (pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s, pygame.K_SPACE))
+            Tank('red', 650, 275, 0, (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN, pygame.K_KP_ENTER))
+            ui = UI()
+            for _ in range(50):
+                while True:
+                    x = randint(0, WIDTH // TILE - 1) * TILE
+                    y = randint(1, HEIGHT // TILE - 1) * TILE
+                    rect = pygame.Rect(x, y, TILE, TILE)
+                    fined = False
+                    for obj in objects:
+                        if rect.colliderect(obj.rect): fined = True
+
+                    if not fined: break
+
+                Block(x, y, TILE)
     keys = pygame.key.get_pressed()
     for bullet in bullets: bullet.update()
     for obj in objects: obj.update()
